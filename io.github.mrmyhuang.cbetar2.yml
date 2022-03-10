@@ -30,7 +30,7 @@ modules:
     sources:
       - type: archive
         url: https://github.com/MrMYHuang/cbetar2/archive/4.26.6.tar.gz
-        sha256: fc531af0edfdfc35bee12125691cbc26c705d97a9d87b027ec4b1c7b3d9616c7
+        sha256: fee34928246629c6d6794a1f5a4a599234720d45eb7e7c04f44e785ae8d8dde8
 
       #- type: dir
       #  path: ..
