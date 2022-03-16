@@ -29,8 +29,8 @@ modules:
         npm_config_offline: 'true'
     sources:
       - type: archive
-        url: https://github.com/MrMYHuang/cbetar2/archive/4.26.6.tar.gz
-        sha256: fee34928246629c6d6794a1f5a4a599234720d45eb7e7c04f44e785ae8d8dde8
+        url: https://github.com/MrMYHuang/cbetar2/archive/4.26.7.tar.gz
+        sha256: 74cb50fa730865b087be791115078d9aeea51a40b9293d30d6886eac3b4c75a5
 
       #- type: dir
       #  path: ..
@@ -52,7 +52,6 @@ modules:
         install -D -t ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps buildElectron/io.github.mrmyhuang.cbetar2.png
         install -D -t ${FLATPAK_DEST}/share/applications buildElectron/io.github.mrmyhuang.cbetar2.desktop
         install -Dm644 -t ${FLATPAK_DEST}/share/metainfo buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml
-        npm run build-electron-store
         npm run dist-flatpak -- $ELECTRON_BUILDER_ARCH_ARGS
       # Bundle app and dependencies
       - cp -a dist/linux*unpacked /app/main
