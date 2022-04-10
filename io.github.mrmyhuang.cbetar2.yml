@@ -29,8 +29,8 @@ modules:
         npm_config_offline: 'true'
     sources:
       - type: archive
-        url: https://github.com/MrMYHuang/cbetar2/archive/17.0.0.tar.gz
-        sha256: 2eb90318e313a7646d6080ff1c7f3f883f50a54c2d5004d9f07d75bed7f8eba7
+        url: https://github.com/MrMYHuang/cbetar2/archive/18.0.0.tar.gz
+        sha256: 6e4c82204d86d1101c22b24c20452075ef1267d24e31f7a474d8c3a118338010
 
       #- type: dir
       #  path: ..
