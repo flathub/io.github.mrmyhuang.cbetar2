@@ -25,12 +25,11 @@ modules:
       env:
         XDG_CACHE_HOME: /run/build/cbetar2/flatpak-node/cache
         npm_config_cache: /run/build/cbetar2/flatpak-node/npm-cache
-        npm_config_nodedir: /usr/lib/sdk/node14
         npm_config_offline: 'true'
     sources:
-      - type: archive
-        url: https://github.com/MrMYHuang/cbetar2/archive/v19.2.0.tar.gz
-        sha256: feb83a68a8fecd6a8f700de8176fd05a805d3349b1e1dc19f253ac85151dc592
+      - type: git
+        url: https://github.com/MrMYHuang/cbetar2
+        tag: 19.2.0
 
       #- type: dir
       #  path: ..
@@ -44,10 +43,12 @@ modules:
     build-commands:
       # Install app wrapper
       - install -Dm755 -t /app/bin/ run.sh
-      # Install npm dependencies
-      - npm install --offline
       # Build the app
       - |
+        # https://github.com/flatpak/flatpak-builder-tools/pull/260
+        ln -s $XDG_CACHE_HOME/node-gyp $HOME/.electron-gyp
+        # Install npm dependencies
+        npm install --offline
         . ./flatpak-node/electron-builder-arch-args.sh
         install -D -t ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps buildElectron/io.github.mrmyhuang.cbetar2.png
         install -D -t ${FLATPAK_DEST}/share/applications buildElectron/io.github.mrmyhuang.cbetar2.desktop
