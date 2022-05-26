@@ -29,7 +29,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/MrMYHuang/cbetar2
-        tag: 19.2.0
+        tag: 19.3.0
 
       #- type: dir
       #  path: ..
@@ -45,14 +45,14 @@ modules:
       - install -Dm755 -t /app/bin/ run.sh
       # Build the app
       - |
-        # https://github.com/flatpak/flatpak-builder-tools/pull/260
-        ln -s $XDG_CACHE_HOME/node-gyp $HOME/.electron-gyp
         # Install npm dependencies
-        npm install --offline
+        npm install --offline  --ignore-scripts
         . ./flatpak-node/electron-builder-arch-args.sh
         install -D -t ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps buildElectron/io.github.mrmyhuang.cbetar2.png
         install -D -t ${FLATPAK_DEST}/share/applications buildElectron/io.github.mrmyhuang.cbetar2.desktop
         install -Dm644 -t ${FLATPAK_DEST}/share/metainfo buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml
+        # https://github.com/flatpak/flatpak-builder-tools/pull/260
+        ln -s $XDG_CACHE_HOME/node-gyp $HOME/.electron-gyp
         npm run dist-flatpak -- $ELECTRON_BUILDER_ARCH_ARGS
       # Bundle app and dependencies
       - cp -a dist/linux*unpacked /app/main
