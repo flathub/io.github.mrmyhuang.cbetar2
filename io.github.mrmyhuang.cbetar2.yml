@@ -5,7 +5,7 @@ sdk: org.freedesktop.Sdk
 base: org.electronjs.Electron2.BaseApp
 base-version: '21.08'
 sdk-extensions:
-  - org.freedesktop.Sdk.Extension.node14
+  - org.freedesktop.Sdk.Extension.node16
 command: run.sh
 separate-locales: false
 finish-args:
@@ -15,21 +15,35 @@ finish-args:
   - --share=network
   - --filesystem=home
 build-options:
-  append-path: /usr/lib/sdk/node14/bin
+  append-path: /usr/lib/sdk/node16/bin
   env:
     NPM_CONFIG_LOGLEVEL: info
 modules:
+  - name: yarn
+    buildsystem: simple
+    build-commands:
+      - 'cp -a * /app'
+    # Only used for building, so clean it up afterwards.
+    cleanup:
+      - '*'
+    sources:
+      - type: archive
+        url: https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-v1.22.19.tar.gz
+        sha256: 732620bac8b1690d507274f025f3c6cfdc3627a84d9642e38a07452cc00e0f2e
+
   - name: cbetar2
     buildsystem: simple
     build-options:
+      append-path: '/usr/lib/sdk/node16/bin:/app/yarn/bin'
       env:
         XDG_CACHE_HOME: /run/build/cbetar2/flatpak-node/cache
         npm_config_cache: /run/build/cbetar2/flatpak-node/npm-cache
+        npm_config_nodedir: /usr/lib/sdk/node16
         npm_config_offline: 'true'
     sources:
       - type: git
         url: https://github.com/MrMYHuang/cbetar2
-        tag: 20.0.0
+        tag: 20.0.1
 
       #- type: dir
       #  path: ..
@@ -46,13 +60,14 @@ modules:
       # Build the app
       - |
         # Install npm dependencies
-        npm install --offline  --ignore-scripts
+        HOME=$PWD yarn config --offline set yarn-offline-mirror $FLATPAK_BUILDER_BUILDDIR/flatpak-node/yarn-mirror
+        yarn --offline
         . ./flatpak-node/electron-builder-arch-args.sh
         install -D -t ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps buildElectron/io.github.mrmyhuang.cbetar2.png
         install -D -t ${FLATPAK_DEST}/share/applications buildElectron/io.github.mrmyhuang.cbetar2.desktop
         install -Dm644 -t ${FLATPAK_DEST}/share/metainfo buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml
         # https://github.com/flatpak/flatpak-builder-tools/pull/260
         ln -s $XDG_CACHE_HOME/node-gyp $HOME/.electron-gyp
-        npm run dist-flatpak -- $ELECTRON_BUILDER_ARCH_ARGS
+        yarn run --offline dist-flatpak -- $ELECTRON_BUILDER_ARCH_ARGS
       # Bundle app and dependencies
       - cp -a dist/linux*unpacked /app/main
