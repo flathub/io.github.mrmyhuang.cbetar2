@@ -45,6 +45,7 @@ modules:
       - type: git
         url: https://github.com/MrMYHuang/cbetar2
         tag: 24.0.0
+        commit: 12d4ef2ae1ade3f11224b31fd07b833eec526de0
 
       #- type: dir
       #  path: ..
