@@ -10,6 +10,7 @@ command: run.sh
 separate-locales: false
 finish-args:
   - --share=ipc
+  - --socket=wayland
   - --socket=x11
   - --socket=pulseaudio
   - --share=network
@@ -53,7 +54,11 @@ modules:
       - type: script
         dest-filename: run.sh
         commands:
-          - zypak-wrapper.sh /app/main/cbetar2 "$@"
+          - if [ -n "$WAYLAND_DISPLAY" ] && [ -S "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" ]; then
+          -   exec zypak-wrapper.sh /app/main/cbetar2 "$@"
+          - else
+          -   exec zypak-wrapper.sh /app/main/cbetar2 --ozone-platform=x11 "$@"
+          - fi
     build-commands:
       # Install app wrapper
       - install -Dm755 -t /app/bin/ run.sh
